@@ -87,5 +87,6 @@ task pmd(type: Pmd, group: 'Verification', description: 'Inspect sourcecode for 
         html {
             destination "$reportsDir/pmd/pmd.html"
         }
+        consoleOutput = true
     }
 }
