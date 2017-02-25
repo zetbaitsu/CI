@@ -38,9 +38,6 @@ addons:
     paths:
       - $(git ls-files -o | grep build/outputs | tr "\n" ":")
 
-before_install:
-  - pip install --user codecov
-
 before_script:
   - echo no | android create avd --force --name test --target $ANDROID_TARGET --abi $ANDROID_ABI
   - emulator -avd test -no-skin -no-audio -no-window &
@@ -51,11 +48,10 @@ script:
   - adb devices
   - adb shell input keyevent 82 &
   - ./gradlew connectedAndroidTest -PdisablePreDex --continue --stacktrace
-  - rm /home/travis/.gradle/caches/2.14.1/plugin-resolution/cache.properties.lock
 
 after_success:
   - ./gradlew jacocoFullReport
-  - codecov
+  - bash <(curl -s https://codecov.io/bash)
 
 after_failure:
   - pandoc builder/build/reports/tests/index.html -t plain | sed -n '/^Failed tests/,/default-package/p'
